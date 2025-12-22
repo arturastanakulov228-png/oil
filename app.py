@@ -1,52 +1,80 @@
 from flask import Flask, render_template
 import yfinance as yf
 from datetime import datetime
+import requests
+import json
 
 app = Flask(__name__)
 
-def get_data():
-    """Получаем данные о нефти и акциях"""
+def get_oil_price():
+    """Цена на нефть Brent в реальном времени"""
     try:
-        # Цена на нефть Brent
         oil = yf.Ticker("BZ=F")
-        oil_price = f"{round(oil.history(period='1d')['Close'].iloc[-1], 2)} USD/баррель"
-        
-        # Акции компаний
-        companies = {
-            'ROSN': 'Роснефть',
-            'LKOH': 'Лукойл', 
-            'GAZP': 'Газпром'
-        }
-        
-        stocks = {}
-        for ticker, name in companies.items():
-            try:
-                stock = yf.Ticker(f"{ticker}.ME")
-                price = round(stock.history(period='1d')['Close'].iloc[-1], 2)
-                stocks[name] = f"{price} RUB"
-            except:
-                stocks[name] = "Н/Д"
-        
-        return {
-            'oil_price': oil_price,
-            'stocks': stocks,
-            'update_time': datetime.now().strftime('%H:%M %d.%m.%Y')
-        }
+        price = oil.history(period='1d')['Close'].iloc[-1]
+        return f"{price:.2f} USD"
     except:
-        # Если API не работает, показываем тестовые данные
-        return {
-            'oil_price': '85.50 USD/баррель',
-            'stocks': {
-                'Роснефть': '600.20 RUB',
-                'Лукойл': '7520.50 RUB',
-                'Газпром': '165.80 RUB'
-            },
-            'update_time': datetime.now().strftime('%H:%M %d.%m.%Y')
-        }
+        return "85.50 USD"
+
+def get_stock_prices():
+    """Акции нефтяных и газовых компаний"""
+    stocks = {
+        'ROSN.ME': 'Роснефть',
+        'LKOH.ME': 'Лукойл',
+        'GAZP.ME': 'Газпром',
+        'NVTK.ME': 'Новатэк',
+        'SNGS.ME': 'Сургутнефтегаз'
+    }
+    
+    result = {}
+    for ticker, name in stocks.items():
+        try:
+            stock = yf.Ticker(ticker)
+            price = stock.history(period='1d')['Close'].iloc[-1]
+            result[name] = f"{price:.2f} RUB"
+        except:
+            result[name] = "Н/Д"
+    
+    return result
+
+def get_fuel_prices():
+    """Примерные цены на топливо (можно заменить на парсинг с реальных сайтов)"""
+    # В реальном проекте парсил бы с сайтов АЗС
+    return {
+        'АИ-95': '55.80 ₽',
+        'АИ-92': '51.20 ₽',
+        'Дизель': '58.90 ₽',
+        'Газ (пропан)': '32.50 ₽'
+    }
+
+def get_gas_price():
+    """Цена на природный газ"""
+    try:
+        gas = yf.Ticker("NG=F")  # Natural Gas Futures
+        price = gas.history(period='1d')['Close'].iloc[-1]
+        return f"{price:.2f} USD/млн BTU"
+    except:
+        return "3.85 USD/млн BTU"
+
+def get_exchange_rate():
+    """Курс USD/RUB"""
+    try:
+        response = requests.get('https://www.cbr-xml-daily.ru/daily_json.js', timeout=3)
+        data = response.json()
+        rate = data['Valute']['USD']['Value']
+        return f"{rate:.2f} ₽"
+    except:
+        return "92.50 ₽"
 
 @app.route('/')
 def index():
-    data = get_data()
+    data = {
+        'oil_price': get_oil_price(),
+        'gas_price': get_gas_price(),
+        'stocks': get_stock_prices(),
+        'fuel': get_fuel_prices(),
+        'usd_rate': get_exchange_rate(),
+        'update_time': datetime.now().strftime('%H:%M %d.%m.%Y')
+    }
     return render_template('index.html', **data)
 
 if __name__ == '__main__':
