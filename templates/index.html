@@ -23,7 +23,7 @@
         
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid #334155;
         }
@@ -38,6 +38,41 @@
         .subtitle {
             color: #94a3b8;
             font-size: 1.1rem;
+        }
+        
+        /* Навигация */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0 40px;
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover {
+            background: #1e293b;
+            color: #60a5fa;
+        }
+        
+        .nav-link.active {
+            background: #3b82f6;
+            color: white;
         }
         
         .dashboard {
@@ -80,15 +115,6 @@
             font-weight: 500;
         }
         
-        .price-large {
-            font-size: 2.8rem;
-            font-weight: 600;
-            color: #22c55e;
-            text-align: center;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-        
         .data-row {
             display: flex;
             justify-content: space-between;
@@ -111,12 +137,6 @@
             font-weight: 600;
             color: #22c55e;
             font-family: 'Courier New', monospace;
-        }
-        
-        .data-unit {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-left: 4px;
         }
         
         .currency-card {
@@ -168,8 +188,9 @@
                 grid-template-columns: 1fr;
             }
             
-            .price-large {
-                font-size: 2.2rem;
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
             }
             
             h1 {
@@ -184,6 +205,16 @@
             <h1>🛢️ Нефтегазовый монитор России</h1>
             <p class="subtitle">Актуальные рыночные данные в реальном времени</p>
         </header>
+        
+        <!-- Навигация -->
+        <div class="nav-bar">
+            <a href="/" class="nav-link active">
+                <span>📈</span> Мониторинг цен
+            </a>
+            <a href="/about" class="nav-link">
+                <span>🏛️</span> Значение отрасли
+            </a>
+        </div>
         
         <div class="update-info">
             <div class="update-time">📅 Обновлено: {{ update_time }}</div>
@@ -234,7 +265,7 @@
                 {% for name, price in fuel.items() %}
                 <div class="data-row">
                     <span class="data-name">{{ name }}</span>
-                    <span class="data-value">{{ price }}<span class="data-unit">/литр</span></span>
+                    <span class="data-value">{{ price }}</span>
                 </div>
                 {% endfor %}
             </div>
