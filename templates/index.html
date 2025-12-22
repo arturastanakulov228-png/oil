@@ -3,115 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Нефтяной монитор России</title>
+    <title>Нефтегазовый монитор | Россия</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Arial', sans-serif; 
-            background: linear-gradient(135deg, #1a2980, #26d0ce);
-            color: white;
+        
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
         }
+        
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        h1 { 
-            text-align: center; 
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            color: #FFD700;
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #334155;
         }
+        
+        h1 {
+            color: #60a5fa;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
         .card {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
+            background: #1e293b;
+            border-radius: 12px;
             padding: 25px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            border-bottom: 1px solid #334155;
         }
-        .card h2 {
-            color: #FFD700;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding-bottom: 10px;
+        
+        .card-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+            color: #60a5fa;
         }
-        .price {
-            font-size: 2.2em;
-            font-weight: bold;
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        
+        .price-large {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #22c55e;
             text-align: center;
             margin: 20px 0;
+            font-family: 'Courier New', monospace;
         }
-        .stock-row {
+        
+        .data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 0;
+            border-bottom: 1px solid #2d3748;
         }
-        .stock-row:last-child {
+        
+        .data-row:last-child {
             border-bottom: none;
         }
-        .stock-name {
-            font-weight: bold;
-            font-size: 1.1em;
+        
+        .data-name {
+            color: #cbd5e1;
+            font-weight: 500;
         }
-        .stock-price {
-            font-size: 1.3em;
-            color: #90EE90;
+        
+        .data-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #22c55e;
+            font-family: 'Courier New', monospace;
         }
+        
+        .data-unit {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-left: 4px;
+        }
+        
+        .currency-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-color: #22c55e;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid #334155;
+        }
+        
+        .update-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
         .update-time {
-            text-align: center;
-            margin-top: 30px;
-            color: #ADD8E6;
-            font-size: 0.9em;
+            color: #60a5fa;
+            font-weight: 500;
         }
-        .disclaimer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.8em;
-            color: #CCC;
-            opacity: 0.8;
+        
+        .reload-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
         }
-        @media (max-width: 600px) {
-            .container { padding: 15px; }
-            h1 { font-size: 1.8em; }
-            .price { font-size: 1.8em; }
+        
+        .reload-btn:hover {
+            background: #2563eb;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .price-large {
+                font-size: 2.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🛢️ Нефтяной монитор России</h1>
+        <header>
+            <h1>🛢️ Нефтегазовый монитор России</h1>
+            <p class="subtitle">Актуальные рыночные данные в реальном времени</p>
+        </header>
         
-        <div class="card">
-            <h2>Цена на нефть Brent</h2>
-            <div class="price">{{ oil_price }}</div>
+        <div class="update-info">
+            <div class="update-time">📅 Обновлено: {{ update_time }}</div>
+            <button class="reload-btn" onclick="location.reload()">🔄 Обновить данные</button>
         </div>
         
-        <div class="card">
-            <h2>Акции нефтяных компаний</h2>
-            {% for name, price in stocks.items() %}
-            <div class="stock-row">
-                <span class="stock-name">{{ name }}</span>
-                <span class="stock-price">{{ price }}</span>
+        <div class="dashboard">
+            <!-- Цены на сырье -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🛢️</div>
+                    <h2 class="card-title">Сырьевые рынки</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-name">Нефть Brent</span>
+                    <span class="data-value">{{ oil_price }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-name">Природный газ</span>
+                    <span class="data-value">{{ gas_price }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-name">Курс USD/RUB</span>
+                    <span class="data-value">{{ usd_rate }}</span>
+                </div>
             </div>
-            {% endfor %}
+            
+            <!-- Акции компаний -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <h2 class="card-title">Акции компаний</h2>
+                </div>
+                {% for name, price in stocks.items() %}
+                <div class="data-row">
+                    <span class="data-name">{{ name }}</span>
+                    <span class="data-value">{{ price }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Цены на топливо -->
+            <div class="card currency-card">
+                <div class="card-header">
+                    <div class="card-icon">⛽</div>
+                    <h2 class="card-title">Топливо в России</h2>
+                </div>
+                {% for name, price in fuel.items() %}
+                <div class="data-row">
+                    <span class="data-name">{{ name }}</span>
+                    <span class="data-value">{{ price }}<span class="data-unit">/литр</span></span>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         
-        <div class="update-time">
-            📅 Последнее обновление: {{ update_time }}
-        </div>
-        
-        <div class="disclaimer">
-            ℹ️ Информация предоставляется в ознакомительных целях.<br>
-            Данные обновляются автоматически с Yahoo Finance.
+        <div class="footer">
+            <p>ℹ️ Данные обновляются при каждой перезагрузке страницы. Информация предоставлена Yahoo Finance и ЦБ РФ.</p>
+            <p>⚠️ Для принятия финансовых решений используйте официальные источники.</p>
         </div>
     </div>
 </body>
